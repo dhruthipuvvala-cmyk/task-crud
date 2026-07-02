@@ -4,7 +4,10 @@
     {
       "src": "backend/core/wsgi.py",
       "use": "@vercel/python",
-      "config": { "maxDuration": 60 }
+      "config": { 
+        "maxDuration": 60,
+        "includeFiles": "backend/**"
+      }
     }
   ],
   "routes": [
