@@ -2,9 +2,16 @@
 Django settings for core project.
 Optimized for Vercel Serverless Deployment.
 """
+import pymysql
+import sys
 
-import os
+# Force pymysql to register itself as the default MySQL connection driver
+pymysql.version_info = (2, 3, 1, "final", 0)
+pymysql.install_as_MySQLdb()
+
+# Rest of your imports continue normally below...
 from pathlib import Path
+import os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -72,11 +79,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME', 'crud_db'),
-        'USER': os.getenv('DB_USER', 'root'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'admin'),
-        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
-        'PORT': os.getenv('DB_PORT', '3306'),
+        'NAME': os.getenv('DB_NAME', 'defaultdb'),
+        'USER': os.getenv('DB_USER', 'avnadmin'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'defaultpassword'),
+        'HOST': os.getenv('DB_HOST', 'mysql-1fe4af56-dhruthi-264f.j.aivencloud.com'),
+        'PORT': os.getenv('DB_PORT', '24618'),
     }
 }
 
