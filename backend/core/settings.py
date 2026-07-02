@@ -12,10 +12,9 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 import os
 from pathlib import Path
-
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables from a local .env file if it exists
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,12 +28,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-local-dev-key-12345')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG','True') == 'True'
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
+
+# Render will pass ALLOWED_HOSTS and CORS origins securely via environment variables
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:5173").split(",")
 
 
-# Application definition                                                                      
+# Application definition                                                                         
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -52,13 +53,11 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    #'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -81,17 +80,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
-# Database
+# Database Configuration
+# Uses Aiven credentials when deployed on Render, falls back to your local PC MySQL when offline.
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME', 'crud_db'),
-        'USER': os.getenv('DB_USER', 'root'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'your_local_password'),
-        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
-        'PORT': os.getenv('DB_PORT', '3306'),
+        'NAME': os.getenv('DB_NAME', 'crud_db'),       # Local database name fallback
+        'USER': os.getenv('DB_USER', 'root'),          # Local username fallback
+        'PASSWORD': os.getenv('DB_PASSWORD', 'admin'), # Local password fallback
+        'HOST': os.getenv('DB_HOST', '127.0.0.1'),     # Local host fallback
+        'PORT': os.getenv('DB_PORT', '3306'),          # Local port fallback
     }
 }
 
