@@ -232,11 +232,15 @@ and password. Managed hosts usually enforce TLS — set `DB_SSL_MODE=require`.
 ### Backend → Render
 
 1. New **Web Service** from the GitHub repo, **Root Directory** `backend`.
-2. **Build Command:** `pip install -r requirements.txt`
+2. **Build Command:** `pip install -r requirements.txt && python manage.py collectstatic --noinput`
 3. **Start Command:** `gunicorn core.wsgi:application`
 4. Add the backend environment variables above (`SECRET_KEY`, `DEBUG=False`,
    `ALLOWED_HOSTS`, `CORS_ALLOWED_ORIGINS`, all `DB_*`, `DB_SSL_MODE=require`).
 5. After the first deploy, run `python manage.py migrate` from the Render shell.
+
+> `collectstatic` in the build step is required: production uses WhiteNoise with
+> `CompressedManifestStaticFilesStorage`, so the static manifest must be generated at build
+> time or `/admin/` and the browsable API would error with `DEBUG=False`.
 
 ### Frontend → Vercel
 
